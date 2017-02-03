@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Popular Movies Demo</string>
+    <string name="action_sort_by_rate">Sort by rate</string>
+    <string name="action_sort_by_popularity">Sort by popularity</string>
+</resources>
