@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -19,28 +20,34 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<Movie> arrayList;
+
+    GridView gridView;
 
     private ProgressBar mProgressBar;
 
     private String TAG = MainActivity.class.getSimpleName();
 
-    ArrayList<HashMap<String, String>> moviesList;
+    // ArrayList<HashMap<String, String>> moviesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        arrayList = new ArrayList<>();
+        gridView = (GridView)findViewById(R.id.gridView);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        moviesList = new ArrayList<>();
+        // moviesList = new ArrayList<>();
 
         new GetMovies().execute();
 
@@ -93,21 +100,26 @@ public class MainActivity extends AppCompatActivity {
                     // looping through all movies
                     for (int i = 0; i < movies.length(); i++) {
                         JSONObject m = movies.getJSONObject(i);
+                        arrayList.add(new Movie(
+                                m.getString("poster_path"),
+                                m.getString("title"),
+                                m.getString("id")
+                        ));
 
-                        String id = m.getString("id");
-                        String title = m.getString("title");
-                        String poster = m.getString("poster_path");
-
-                        // tmp hash map for single movie
-                        HashMap<String, String> movie = new HashMap<>();
-
-                        // adding each child node to HashMap array key => value
-                        movie.put("id", id);
-                        movie.put("title", title);
-                        movie.put("poster", poster);
+//                        String id = m.getString("id");
+//                        String title = m.getString("title");
+//                        String poster = m.getString("poster_path");
+//
+//                        // tmp hash map for single movie
+//                        HashMap<String, String> movie = new HashMap<>();
+//
+//                        // adding each child node to HashMap array key => value
+//                        movie.put("id", id);
+//                        movie.put("title", title);
+//                        movie.put("poster", poster);
 
                         // adding movie to movies list
-                        moviesList.add(movie);
+                        // moviesList.add(movie);
                     }
 
                 } catch (final JSONException e) {
@@ -121,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+
+
             } else {
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
@@ -145,8 +159,11 @@ public class MainActivity extends AppCompatActivity {
             /**
              * Updating parsed JSON data into Grid View
              */
-            Log.i("Movies", moviesList.toString());
-
+            // Log.i("Movies", moviesList.toString());
+            CustomGridAdapter adapter = new CustomGridAdapter(
+                    getApplicationContext(), R.layout.grid_item, arrayList
+            );
+            gridView.setAdapter(adapter);
 
         }
     }

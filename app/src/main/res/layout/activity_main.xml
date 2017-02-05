@@ -19,6 +19,7 @@
 
     <GridView
         android:id="@+id/gridView"
+        android:layout_below="@+id/toolbar"
         android:numColumns="auto_fit"
         android:columnWidth="100dp"
         android:layout_width="match_parent"
