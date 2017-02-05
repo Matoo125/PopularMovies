@@ -16,18 +16,17 @@ import java.net.URL;
  * Created by matej on 4.2.2017.
  * Make http call and fetch raw response
  * convert it to string and
- * @return string
  */
 
-public class HttpHandler {
+class HttpHandler {
 
     private static final String TAG = HttpHandler.class.getSimpleName();
 
-    public HttpHandler() {
+    HttpHandler() {
 
     }
 
-    public String makeServiceCall(URL url) {
+     String makeServiceCall(URL url) {
         String response = null;
         try {
 
@@ -35,7 +34,7 @@ public class HttpHandler {
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
             // read the response
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);

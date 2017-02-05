@@ -34,6 +34,7 @@ public class CustomGridAdapter extends ArrayAdapter<Movie> {
 
     }
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -44,9 +45,14 @@ public class CustomGridAdapter extends ArrayAdapter<Movie> {
         }
 
         Movie movie = getItem(position);
+        String poster = movie.getPoster_path();
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewPoster);
-        Picasso.with(context).load(movie.getPoster_path()).into(imageView);
+        if (poster != null)
+            Picasso.with(context).load(poster).into(imageView);
+        else
+            Picasso.with(context).load(R.drawable.placeholder).into(imageView);
+
 
         return convertView;
     }

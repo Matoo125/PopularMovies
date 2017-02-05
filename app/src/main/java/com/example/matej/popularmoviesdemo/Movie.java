@@ -7,17 +7,17 @@ package com.example.matej.popularmoviesdemo;
 
 public class Movie {
 
-    private String poster_path;
+    private String poster_path = null;
     private String title;
     private String id;
 
-    public Movie(String poster_path, String title, String id) {
+     Movie(String poster_path, String title, String id) {
         this.poster_path = poster_path;
         this.title = title;
         this.id = id;
     }
 
-    public String getPoster_path() {
+     String getPoster_path() {
         return ApiRequest.IMAGE_URL + ApiRequest.IMAGE_SIZE + poster_path;
     }
 
