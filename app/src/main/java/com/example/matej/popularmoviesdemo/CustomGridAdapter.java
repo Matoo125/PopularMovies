@@ -19,13 +19,13 @@ import java.util.List;
  * custom grid adapter
  */
 
-public class CustomGridAdapter extends ArrayAdapter<Movie> {
+ class CustomGridAdapter extends ArrayAdapter<Movie> {
 
-    ArrayList<Movie> movies;
-    Context context;
-    int resource;
+    private ArrayList<Movie> movies;
+    private Context context;
+    private int resource;
 
-    public CustomGridAdapter(Context context, int resource, ArrayList<Movie> movies) {
+    CustomGridAdapter(Context context, int resource, ArrayList<Movie> movies) {
         super(context, resource, movies);
 
         this.movies = movies;
@@ -48,10 +48,8 @@ public class CustomGridAdapter extends ArrayAdapter<Movie> {
         String poster = movie.getPoster_path();
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewPoster);
-        if (poster != null)
-            Picasso.with(context).load(poster).into(imageView);
-        else
-            Picasso.with(context).load(R.drawable.placeholder).into(imageView);
+        Picasso.with(context).load(poster).placeholder(R.drawable.placeholder).into(imageView);
+
 
 
         return convertView;

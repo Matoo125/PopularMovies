@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
+    private String sortBy = "popular";
+
     // ArrayList<HashMap<String, String>> moviesList;
 
     @Override
@@ -72,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
             HttpHandler sh = new HttpHandler();
 
             // build url
-            Uri uri = Uri.parse(ApiRequest.API_URL).buildUpon()
-                    .appendQueryParameter("sort_by", "popular")
+            Uri uri = Uri.parse(ApiRequest.API_URL + sortBy).buildUpon()
                     .appendQueryParameter("api_key", ApiRequest.API_KEY)
                     .build();
 
@@ -174,10 +175,29 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_sort_by_popularity:
                 // User chose the "Sort by popularity action" show items sorted by popularity...
+                Toast.makeText(getApplicationContext(),
+                        "Sort by popularity action now!",
+                        Toast.LENGTH_LONG).show();
+
+                if (!sortBy.equals("popular")) {
+                    sortBy = "popular";
+                    arrayList.clear();
+                    new GetMovies().execute();
+                }
                 return true;
 
             case R.id.action_sort_by_rate:
                 // User chose the "Sort by rate" show items sorted by rate
+                Toast.makeText(getApplicationContext(),
+                        "Sort by rate action now!",
+                        Toast.LENGTH_LONG).show();
+
+                if (!sortBy.equals("top_rated")) {
+                    sortBy = "top_rated";
+                    arrayList.clear();
+                    new GetMovies().execute();
+                }
+
                 return true;
 
             default:
