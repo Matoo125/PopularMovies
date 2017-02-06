@@ -48,9 +48,8 @@ import java.util.List;
         String poster = movie.getPoster_path();
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewPoster);
+        imageView.setAdjustViewBounds(true);
         Picasso.with(context).load(poster).placeholder(R.drawable.placeholder).into(imageView);
-
-
 
         return convertView;
     }

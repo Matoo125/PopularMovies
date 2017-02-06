@@ -1,5 +1,6 @@
 package com.example.matej.popularmoviesdemo;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String sortBy = "popular";
 
-    // ArrayList<HashMap<String, String>> moviesList;
+    private String poster_path, title, release_date, description, users_rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
-
-        // moviesList = new ArrayList<>();
 
         new GetMovies().execute();
 
@@ -104,23 +104,13 @@ public class MainActivity extends AppCompatActivity {
                         arrayList.add(new Movie(
                                 m.getString("poster_path"),
                                 m.getString("title"),
-                                m.getString("id")
+                                m.getString("id"),
+                                m.getString("release_date"),
+                                m.getString("vote_average"),
+                                m.getString("overview")
+
                         ));
 
-//                        String id = m.getString("id");
-//                        String title = m.getString("title");
-//                        String poster = m.getString("poster_path");
-//
-//                        // tmp hash map for single movie
-//                        HashMap<String, String> movie = new HashMap<>();
-//
-//                        // adding each child node to HashMap array key => value
-//                        movie.put("id", id);
-//                        movie.put("title", title);
-//                        movie.put("poster", poster);
-
-                        // adding movie to movies list
-                        // moviesList.add(movie);
                     }
 
                 } catch (final JSONException e) {
@@ -165,6 +155,30 @@ public class MainActivity extends AppCompatActivity {
                     getApplicationContext(), R.layout.grid_item, arrayList
             );
             gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    Movie movie = arrayList.get(position);
+                    Intent intent = new Intent("android.intent.action.DETAILSACTIVITY");
+
+                    title = movie.getTitle();
+                    poster_path = movie.getPoster_path();
+                    description = movie.getDescription();
+                    users_rating = movie.getUsers_rating();
+                    release_date = movie.getRelease_date();
+
+                    intent.putExtra("title", title);
+                    intent.putExtra("poster", poster_path);
+                    intent.putExtra("description", description);
+                    intent.putExtra("release_date", release_date);
+                    intent.putExtra("users_rating", users_rating);
+
+                    startActivity(intent);
+
+                    // Toast.makeText(getApplicationContext(),"Movie: " + title, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
     }
