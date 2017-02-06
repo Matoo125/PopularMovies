@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by matej on 5.2.2017.
@@ -21,16 +20,16 @@ import java.util.List;
 
  class CustomGridAdapter extends ArrayAdapter<Movie> {
 
-    private ArrayList<Movie> movies;
+    // private ArrayList<Movie> movies;
     private Context context;
-    private int resource;
+    //private int resource;
 
     CustomGridAdapter(Context context, int resource, ArrayList<Movie> movies) {
         super(context, resource, movies);
 
-        this.movies = movies;
+        //this.movies = movies;
         this.context = context;
-        this.resource = resource;
+        //this.resource = resource;
 
     }
 

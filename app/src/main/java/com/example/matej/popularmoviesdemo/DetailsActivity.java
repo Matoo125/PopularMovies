@@ -37,7 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
         if (extras != null) {
             String title = extras.getString("title");
             tv_title.append(title);
-            getSupportActionBar().setTitle(title);
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
 
             String description = extras.getString("description");
             tv_description.append(description);

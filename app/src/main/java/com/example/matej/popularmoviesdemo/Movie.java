@@ -5,7 +5,7 @@ package com.example.matej.popularmoviesdemo;
  * Movie Model
  */
 
-public class Movie {
+ class Movie {
 
     private String poster_path = null;
     private String title;
@@ -40,15 +40,15 @@ public class Movie {
         this.id = id;
     }
 
-    public String getDescription() {
+     String getDescription() {
         return description;
     }
 
-    public String getUsers_rating() {
+     String getUsers_rating() {
         return users_rating;
     }
 
-    public String getRelease_date() {
+     String getRelease_date() {
         return release_date;
     }
 
