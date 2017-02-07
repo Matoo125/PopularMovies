@@ -1,6 +1,7 @@
 package com.example.matej.popularmoviesdemo;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tv_title, tv_release_date, tv_description, tv_users_rating;
     ImageView iv_poster;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,11 @@ public class DetailsActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+        }
 
         tv_title = (TextView)findViewById(R.id.tv_title);
         tv_description = (TextView)findViewById(R.id.tv_description);
@@ -37,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
         if (extras != null) {
             String title = extras.getString("title");
             tv_title.append(title);
-            if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
+            if (actionBar != null) actionBar.setTitle(title);
 
             String description = extras.getString("description");
             tv_description.append(description);
