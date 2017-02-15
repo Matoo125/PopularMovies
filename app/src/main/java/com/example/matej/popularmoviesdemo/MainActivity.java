@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String sortBy = "popular";
 
-    private String poster_path, title, release_date, description, users_rating;
+    private String poster_path, title, release_date, description, users_rating, movie_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,12 +167,14 @@ public class MainActivity extends AppCompatActivity {
                     description = movie.getDescription();
                     users_rating = movie.getUsers_rating();
                     release_date = movie.getRelease_date();
+                    movie_id = movie.getId();
 
                     intent.putExtra("title", title);
                     intent.putExtra("poster", poster_path);
                     intent.putExtra("description", description);
                     intent.putExtra("release_date", release_date);
                     intent.putExtra("users_rating", users_rating);
+                    intent.putExtra("id", movie_id);
 
                     startActivity(intent);
 
