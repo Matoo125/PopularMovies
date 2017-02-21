@@ -24,7 +24,7 @@ package com.example.matej.popularmoviesdemo;
      }
 
      String getPoster_path() {
-        return ApiRequest.IMAGE_URL + ApiRequest.IMAGE_SIZE + poster_path;
+        return poster_path;
     }
 
 

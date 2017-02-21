@@ -44,7 +44,7 @@ import java.util.ArrayList;
         }
 
         Movie movie = getItem(position);
-        String poster = movie.getPoster_path();
+        String poster = ApiRequest.IMAGE_URL + ApiRequest.IMAGE_SIZE + movie.getPoster_path();
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewPoster);
         imageView.setAdjustViewBounds(true);

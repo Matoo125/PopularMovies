@@ -24,6 +24,11 @@ class Review {
     String getContent() { return content; }
     String getUrl() { return url; }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
 
 
 }

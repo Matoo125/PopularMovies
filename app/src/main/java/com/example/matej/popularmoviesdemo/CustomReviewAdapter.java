@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * custom review adapter
  */
 
-public class CustomReviewAdapter extends ArrayAdapter<Review>{
+class CustomReviewAdapter extends ArrayAdapter<Review>{
 
     private Context context;
     private int layourResourceId;
@@ -53,7 +53,7 @@ public class CustomReviewAdapter extends ArrayAdapter<Review>{
 
             holder = new ReviewHolder();
             holder.textAuthor = (TextView)row.findViewById(R.id.tv_review_author);
-            holder.textContent = (TextView)row.findViewById(R.id.tv_review_content);
+            //holder.textContent = (TextView)row.findViewById(R.id.tv_review_content);
 
             row.setTag(holder);
         }
@@ -65,14 +65,14 @@ public class CustomReviewAdapter extends ArrayAdapter<Review>{
         Review review = getItem(position);
 
         holder.textAuthor.setText(review.getAuthor());
-        holder.textContent.setText(review.getContent());
+       // holder.textContent.setText(review.getContent());
 
         return row;
     }
 
     private static class ReviewHolder {
         TextView textAuthor;
-        TextView textContent;
+        //TextView textContent;
     }
 
 }

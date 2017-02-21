@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
-    private String sortBy = "popular";
+    private String sortBy = "";
 
     private String poster_path, title, release_date, description, users_rating, movie_id;
 
@@ -51,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        new GetMovies().execute();
+        if (AppStatus.getInstance(this).isOnline()) {
+            action_show_popular();
+        } else {
+            action_show_favourites();
+        }
+
 
     }
 
@@ -118,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Json parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -131,9 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Couldn't get json from server. Maybe your internet is not working!", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -144,83 +145,106 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            // Dismiss the progress dialog
             mProgressBar.setVisibility(View.INVISIBLE);
-
-            /**
-             * Updating parsed JSON data into Grid View
-             */
-            // Log.i("Movies", moviesList.toString());
-            CustomGridAdapter adapter = new CustomGridAdapter(
-                    getApplicationContext(), R.layout.grid_item, arrayList
-            );
-            gridView.setAdapter(adapter);
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Movie movie = arrayList.get(position);
-                    Intent intent = new Intent("android.intent.action.DETAILSACTIVITY");
-
-                    title = movie.getTitle();
-                    poster_path = movie.getPoster_path();
-                    description = movie.getDescription();
-                    users_rating = movie.getUsers_rating();
-                    release_date = movie.getRelease_date();
-                    movie_id = movie.getId();
-
-                    intent.putExtra("title", title);
-                    intent.putExtra("poster", poster_path);
-                    intent.putExtra("description", description);
-                    intent.putExtra("release_date", release_date);
-                    intent.putExtra("users_rating", users_rating);
-                    intent.putExtra("id", movie_id);
-
-                    startActivity(intent);
-
-                    // Toast.makeText(getApplicationContext(),"Movie: " + title, Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            show_details();
         }
     }
 
+    public void show_details() {
+        CustomGridAdapter adapter = new CustomGridAdapter(
+                getApplicationContext(), R.layout.grid_item, arrayList
+        );
+        gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Movie movie = arrayList.get(position);
+                Intent intent = new Intent("android.intent.action.DETAILSACTIVITY");
+
+                title = movie.getTitle();
+                poster_path = movie.getPoster_path();
+                description = movie.getDescription();
+                users_rating = movie.getUsers_rating();
+                release_date = movie.getRelease_date();
+                movie_id = movie.getId();
+
+                intent.putExtra("title", title);
+                intent.putExtra("poster", poster_path);
+                intent.putExtra("description", description);
+                intent.putExtra("release_date", release_date);
+                intent.putExtra("users_rating", users_rating);
+                intent.putExtra("id", movie_id);
+
+                startActivity(intent);
+
+            }
+        });
+    }
+
+    public boolean action_show_favourites() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        sortBy = "";
+        arrayList.clear();
+        DatabaseHandler db = new DatabaseHandler(this);
+        arrayList = db.getAllMovies();
+
+        show_details();
+
+        Toast.makeText(getApplicationContext(), "Showing favourites", Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    public boolean action_show_popular() {
+            if (!sortBy.equals("popular")) {
+                sortBy = "popular";
+                arrayList.clear();
+                new GetMovies().execute();
+                Toast.makeText(getApplicationContext(), "Searching for popular movies!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "You are already in popular!", Toast.LENGTH_LONG).show();
+            }
+        return true;
+    }
+
+    public boolean action_show_rate( ){
+
+            if (!sortBy.equals("top_rated")) {
+                sortBy = "top_rated";
+                arrayList.clear();
+                new GetMovies().execute();
+                Toast.makeText(getApplicationContext(), "Searching for top rated movies!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "You are already in top rated!", Toast.LENGTH_LONG).show();
+            }
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_sort_by_popularity:
-                // User chose the "Sort by popularity action" show items sorted by popularity...
-                Toast.makeText(getApplicationContext(),
-                        "Sort by popularity action now!",
-                        Toast.LENGTH_LONG).show();
+            case R.id.action_show_favorites:
+                action_show_favourites();
+                return true;
 
-                if (!sortBy.equals("popular")) {
-                    sortBy = "popular";
-                    arrayList.clear();
-                    new GetMovies().execute();
+            case R.id.action_sort_by_popularity:
+                if (AppStatus.getInstance(this).isOnline()) {
+                    action_show_popular();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please connect to the internet!", Toast.LENGTH_LONG).show();
                 }
                 return true;
 
             case R.id.action_sort_by_rate:
-                // User chose the "Sort by rate" show items sorted by rate
-                Toast.makeText(getApplicationContext(),
-                        "Sort by rate action now!",
-                        Toast.LENGTH_LONG).show();
-
-                if (!sortBy.equals("top_rated")) {
-                    sortBy = "top_rated";
-                    arrayList.clear();
-                    new GetMovies().execute();
+                if (AppStatus.getInstance(this).isOnline()) {
+                    action_show_rate();
+                }  else {
+                    Toast.makeText(getApplicationContext(), "Please connect to the internet!", Toast.LENGTH_LONG).show();
                 }
-
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -231,4 +255,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if ( sortBy.equals("") ) action_show_favourites();
+    }
 }
