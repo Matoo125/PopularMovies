@@ -26,6 +26,12 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        <RelativeLayout
+            android:id="@+id/detailsHeaderRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -78,34 +84,72 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_below="@+id/detailsHeaderRelativeLayout"
+                android:id="@+id/reviewsRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_reviews_title"
+                    android:text="@string/tv_reviews_title"
+                    android:textSize="20sp"
+                    android:paddingTop="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    android:layout_below="@+id/tv_reviews_title"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/reviewLinearLayout"
+                    android:layout_below="@+id/tv_reviews_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_below="@+id/reviewsRelativeLayout"
+            android:id="@+id/videosRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/tv_reviews_title"
-                android:text="@string/tv_reviews_title"
-                android:layout_below="@+id/iv_poster"
+                android:id="@+id/tv_videos_title"
+                android:text="@string/tv_videos_title"
                 android:textSize="20sp"
                 android:paddingTop="10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <ProgressBar
-                android:id="@+id/progressBar2"
-                android:layout_below="@+id/tv_reviews_title"
+                android:id="@+id/progressBar3"
+                android:layout_below="@+id/tv_videos_title"
                 android:visibility="gone"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:id="@+id/reviewLinearLayout"
-                android:layout_below="@+id/tv_reviews_title"
+                android:id="@+id/videoLinearLayout"
+                android:layout_below="@+id/tv_videos_title"
+                android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
             </LinearLayout>
 
 
         </RelativeLayout>
 
+        </RelativeLayout>
 
     </ScrollView>
 

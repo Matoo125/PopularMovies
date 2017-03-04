@@ -8,6 +8,7 @@
     <string name="tv_users_rating">Users rating: &#160;</string>
 
     <string name="tv_reviews_title">Reviews</string>
+    <string name="tv_videos_title">Videos</string>
     <string name="action_add_to_favourites">Add to Favourites</string>
     <string name="action_delete_from_favourites">Delete from Favourites</string>
     <string name="action_show_favorites">Show favourites</string>

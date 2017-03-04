@@ -37,13 +37,14 @@ public class DetailsActivity extends AppCompatActivity {
 
     Menu menu;
     private Boolean are_reviews_shown = false;
+    private Boolean are_videos_shown = false;
 
     TextView tv_title, tv_release_date, tv_description, tv_users_rating;
     ImageView iv_poster;
-    private ProgressBar mProgressBar;
+    private ProgressBar mProgressBar, mProgressBar2;
 
     ArrayList<Review> reviewArrayList;
-    //ListView reviewListView;
+    ArrayList<Video> videoArrayList;
 
     DatabaseHandler db = new DatabaseHandler(this);
 
@@ -53,6 +54,97 @@ public class DetailsActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
+    private class GetVideos extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            mProgressBar2.setVisibility(View.VISIBLE);
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpHandler handler = new HttpHandler();
+
+            Uri uri = Uri.parse(ApiRequest.API_URL + theMovieId + "/videos").buildUpon()
+                    .appendQueryParameter("api_key", ApiRequest.API_KEY)
+                    .build();
+            URL url;
+            String jsonStr = null;
+            try {
+                url = new URL(uri.toString());
+                jsonStr = handler.makeServiceCall(url);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            Log.i(TAG, "Response from url: " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    JSONArray reviews = jsonObject.getJSONArray("results");
+
+                    for (int i = 0; i < reviews.length(); i++) {
+                        JSONObject r = reviews.getJSONObject(i);
+                        videoArrayList.add(new Video(
+                                r.getString("id"),
+                                r.getString("name"),
+                                r.getString("type"),
+                                r.getString("key")
+                        ));
+                    }
+                    Log.i(TAG, "videoArrayList: " + videoArrayList.size());
+
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get videos from server. You have probably problem with the internet!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            show_videos();
+
+        }
+    }
+
+    public boolean show_videos() {
+
+        mProgressBar2.setVisibility(View.GONE);
+
+        LinearLayout v_ll = (LinearLayout) findViewById(R.id.videoLinearLayout);
+
+        for(final Video video : videoArrayList) {
+            TextView text = new TextView(this);
+            text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            text.setText(video.getName());
+            text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ApiRequest.YOUTUBE_URL + video.getKey())));
+                }
+            });
+            v_ll.addView(text);
+        }
+
+        return true;
+    }
 
     private class GetReviews extends AsyncTask<Void, Void, Void> {
 
@@ -126,15 +218,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     public boolean show_reviews(){
         mProgressBar.setVisibility(View.GONE);
-/*
-        CustomReviewAdapter adapter = new CustomReviewAdapter(
-                getApplicationContext(), review, reviewArrayList
-        );
-        reviewListView.setAdapter(adapter);
-        */
 
         LinearLayout r_ll = (LinearLayout) findViewById(R.id.reviewLinearLayout);
-          //  for (int i = 0; i < reviewArrayList.size(); i++) {
+
               for (final Review review : reviewArrayList) {
                 TextView text = new TextView(this);
                 text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -153,20 +239,6 @@ public class DetailsActivity extends AppCompatActivity {
                   });
                 r_ll.addView(text);
             }
-
-//        reviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Review review = reviewArrayList.get(position);
-//                Intent intent = new Intent("android.intent.action.REVIEWACTIVITY");
-//
-//                intent.putExtra("name", review.getAuthor());
-//                intent.putExtra("content", review.getContent());
-//                intent.putExtra("title", theMovieTitle);
-//
-//                startActivity(intent);
-//            }
-//        });
 
         return true;
     }
@@ -191,8 +263,10 @@ public class DetailsActivity extends AppCompatActivity {
         theMovieId = "";
 
         reviewArrayList = new ArrayList<>();
+        videoArrayList = new ArrayList<>();
         //reviewListView = (ListView)findViewById(R.id.reviewListView);
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar2);
+        mProgressBar2 = (ProgressBar)findViewById(R.id.progressBar3);
 
 
         Bundle extras = getIntent().getExtras();
@@ -269,6 +343,11 @@ public class DetailsActivity extends AppCompatActivity {
                 are_reviews_shown = true;
             }
 
+            if (!are_videos_shown && AppStatus.getInstance(this).isOnline() ){
+                new GetVideos().execute();
+                are_videos_shown = true;
+            }
+
             getMenuInflater().inflate(R.menu.delete_from_fav, menu);
 
         }catch (Exception e) {
@@ -276,6 +355,11 @@ public class DetailsActivity extends AppCompatActivity {
             if (!are_reviews_shown) {
                 new GetReviews().execute();
                 are_reviews_shown = true;
+            }
+
+            if(!are_videos_shown) {
+                new GetVideos().execute();
+                are_videos_shown = true;
             }
         }
 
