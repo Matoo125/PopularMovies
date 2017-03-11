@@ -22,24 +22,23 @@ import java.util.ArrayList;
     private static final int DATABASE_VERSION = 8;
 
     // Database name
-    private static final String DATABASE_NAME = "movieDetails";
+    public static final String DATABASE_NAME = "movieDetails";
 
     // Table names
-    private static final String TABLE_MOVIE = "movies";
-    private static final String TABLE_REVIEW = "review";
-
+    public static final String TABLE_MOVIE = "movies";
+    public static final String TABLE_REVIEW = "review";
     // Movie Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_POSTER_PATH = "poster";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_RATING = "rating";
-    private static final String KEY_RELEASE_DATE = "release";
+    public static final String KEY_ID = "id";
+    public static final String KEY_POSTER_PATH = "poster";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_RATING = "rating";
+    public static final String KEY_RELEASE_DATE = "release";
 
     // Review table column names
-    private static final String R_KEY_AUTHOR = "author";
-    private static final String R_KEY_CONTENT = "content";
-    private static final String R_KEY_MOVIE_ID = "movie_id";
+    public static final String R_KEY_AUTHOR = "author";
+    public static final String R_KEY_CONTENT = "content";
+    public static final String R_KEY_MOVIE_ID = "movie_id";
 
     protected DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

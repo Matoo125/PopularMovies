@@ -26,9 +26,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Movie> arrayList;
+    private ArrayList<Movie> arrayList;
 
-    GridView gridView;
+    private GridView gridView;
 
     private ProgressBar mProgressBar;
 
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private String sortBy = "";
 
     private String poster_path, title, release_date, description, users_rating, movie_id;
+
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +53,27 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        if (AppStatus.getInstance(this).isOnline()) {
-            action_show_popular();
+        if(savedInstanceState != null) {
+            arrayList = savedInstanceState.getParcelableArrayList("key");
+            show_details(index);
         } else {
-            action_show_favourites();
+            if (AppStatus.getInstance(this).isOnline()) {
+                action_show_popular();
+            } else {
+                action_show_favourites();
+            }
         }
 
 
+
+
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList("key", arrayList);
+        index = gridView.getFirstVisiblePosition();
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
 
@@ -94,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            Log.i(TAG, "Response from url: " + jsonStr);
+            Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null) {
                 try {
@@ -146,15 +162,16 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mProgressBar.setVisibility(View.INVISIBLE);
-            show_details();
+            show_details(0);
         }
     }
 
-    public void show_details() {
+    public void show_details(int mIndex) {
         CustomGridAdapter adapter = new CustomGridAdapter(
                 getApplicationContext(), R.layout.grid_item, arrayList
         );
         gridView.setAdapter(adapter);
+        gridView.setSelection(mIndex);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -189,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = new DatabaseHandler(this);
         arrayList = db.getAllMovies();
 
-        show_details();
+        show_details(0);
 
         Toast.makeText(getApplicationContext(), "Showing favourites", Toast.LENGTH_LONG).show();
         return true;

@@ -8,7 +8,7 @@ package com.example.matej.popularmoviesdemo;
 class ApiRequest {
 
     static String API_URL = "http://api.themoviedb.org/3/movie/";
-    static String API_KEY = ""; // add api key here
+    static String API_KEY = "8510b1c15dd30bd086d3d12db749d9a5"; // add api key here
     static String IMAGE_URL = "http://image.tmdb.org/t/p/";
     static String IMAGE_SIZE = "w185";
     static String YOUTUBE_URL = "http://www.youtube.com/watch?v=";
